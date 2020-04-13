@@ -1,6 +1,5 @@
 <template>
   <div class="login">
-    <!-- Modal -->
     <div
       class="modal fade"
       id="login"
@@ -93,13 +92,12 @@
                   <label for="name">Your name</label>
                   <input
                     type="text"
-                    v-model="name"
+                    v-model="fullName"
                     class="form-control"
                     id="name"
-                    placeholder="Your nice name"
+                    placeholder="Your full name"
                   />
                 </div>
-
                 <div class="form-group">
                   <label for="email">Email address</label>
                   <input
@@ -121,6 +119,16 @@
                     placeholder="Password"
                   />
                 </div>
+                <div class="form-group">
+                  <label for="password">Confirm Password</label>
+                  <input
+                    type="password"
+                    v-model="cPassword"
+                    class="form-control"
+                    id="cPassword"
+                    placeholder="Confirm Password"
+                  />
+                </div>
 
                 <div class="form-group">
                   <button class="btn btn-primary" @click="register">
@@ -137,7 +145,54 @@
 </template>
 
 <script>
+import $ from "jquery";
+import { fireAuth } from "@/db/firebase";
+
 export default {
-  name: "UserLS"
-}
+  name: "UserLS",
+  data() {
+    return {
+      fullName: null,
+      email: null,
+      password: null,
+      cPassword: null
+    };
+  },
+  methods: {
+    register() {
+      if (this.password === this.cPassword) {
+        fireAuth
+          .createUserWithEmailAndPassword(this.email, this.cPassword)
+          .then(() => {
+            $("#login").modal("hide");
+            this.$router.replace("/admin/overview");
+          })
+          .catch(error => {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+
+            console.log("errorCode: " + errorCode);
+            console.log("errorMessage: " + errorMessage);
+          });
+      }
+    },
+    login() {
+      if (this.email !== null && this.password !== null) {
+        fireAuth
+          .signInWithEmailAndPassword(this.email, this.password)
+          .then(() => {
+            $("#login").modal("hide");
+            this.$router.replace("/admin/overview");
+          })
+          .catch(function(error) {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+
+            console.log("errorCode: " + errorCode);
+            console.log("errorMessage: " + errorMessage);
+          });
+      }
+    }
+  }
+};
 </script>

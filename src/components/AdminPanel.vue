@@ -72,14 +72,13 @@
               </router-link>
             </li>
             <li>
-              <router-link to="/admin/logout">
+              <a @click="logout">
                 <i class="fa fa-folder"></i>
                 <span class="menu-text">Logout</span>
-              </router-link>
+              </a>
             </li>
           </ul>
         </div>
-        <!-- sidebar-menu  -->
       </div>
     </nav>
     <main class="page-content">
@@ -90,6 +89,7 @@
 
 <script>
 import $ from "jquery";
+import { fireAuth } from "@/db/firebase";
 export default {
   name: "AdminPanel",
   methods: {
@@ -111,6 +111,16 @@ export default {
           }
         );
       }
+    },
+    logout() {
+      fireAuth
+        .signOut()
+        .then(() => {
+          this.$router.replace("/");
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };

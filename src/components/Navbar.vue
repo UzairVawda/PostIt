@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <router-link to="/" class="navbar-brand">POST-IT</router-link>
+    <router-link to="/" class="navbar-brand">POST~IT</router-link>
     <button
       class="navbar-toggler"
       type="button"
