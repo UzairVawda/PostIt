@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import { fireAuth } from "@/db/firebase";
 
 import Home from "../views/Home.vue";
 import About from "../views/About.vue";
@@ -26,6 +27,7 @@ const routes = [
     path: "/admin",
     name: "Admin",
     component: Admin,
+    meta: { requiresAuth: true },
     children: [
       {
         path: "overview",
@@ -50,6 +52,19 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(x => x.meta.requiresAuth);
+  const currentUser = fireAuth.currentUser;
+
+  if (requiresAuth && !currentUser) {
+    next("/");
+  } else if (requiresAuth && currentUser) {
+    next();
+  } else {
+    next();
+  }
 });
 
 export default router;

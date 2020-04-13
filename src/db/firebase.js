@@ -14,3 +14,5 @@ var firebaseConfig = {
 // Initialize Firebase
 fire.initializeApp(firebaseConfig);
 fire.analytics();
+
+export const fireAuth = fire.auth();
